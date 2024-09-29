@@ -21,3 +21,8 @@ install the following dependencies
 ```commandline
 pip3 install fastapi[standard] pyjwt uvicorn
 ```
+
+run the following command to run the API server
+```commandline
+ uvicorn src.main:app --reload
+```
