@@ -1,5 +1,4 @@
-# ArtisanApplication
-A simple chat bot application
+# Backend API Server
 
 # Execute
 
