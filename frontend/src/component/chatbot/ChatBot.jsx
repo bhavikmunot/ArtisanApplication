@@ -93,7 +93,14 @@ class Chatbot extends Component {
 
                 <div className="chat-body">
                     {this.state.messages.map((msg) => (
+
+
+
                         <div key={msg.id} className={`message ${msg.sender === 'Ava' ? 'from-ava' : 'from-user'}`}>
+
+                            {msg.sender === 'Ava' && (
+                                <img className="avatar" src={avatarImage} alt={msg.sender}/>
+                            )}
                                 <p>{msg.text}</p>
                         </div>
                     ))}
