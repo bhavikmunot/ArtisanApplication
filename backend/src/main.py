@@ -4,9 +4,15 @@ from fastapi.middleware.cors import CORSMiddleware
 
 import fastapi as fastapi
 import fastapi.security as security
+from fastapi import Request
+from slowapi import Limiter, _rate_limit_exceeded_handler
+from slowapi.middleware import SlowAPIMiddleware
+from slowapi.util import get_remote_address
 
 from .static_chatbot_responses import STATIC_RESPONSE
 from .authentication_util import get_current_user, authenticate_user, create_token
+
+limiter = Limiter(key_func=get_remote_address)
 
 app = fastapi.FastAPI()
 
@@ -17,6 +23,11 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+app.state.limiter = limiter
+app.add_middleware(SlowAPIMiddleware)
+app.state.limiter = limiter
+app.add_exception_handler(429, _rate_limit_exceeded_handler)
 
 
 @app.post("/api/token")
@@ -32,9 +43,11 @@ async def generate_token(
 
 
 @app.get("/api/message_reply/{message}")
+@limiter.limit("5/minute")
 async def process_user_messages(
         user: Annotated[str, fastapi.Depends(get_current_user)],
         message: Annotated[str, fastapi.Path()],
+        request: Request
 ):
     print(f"Received a message: {message} from user: {user}")
     random_number = random.randint(0,1)

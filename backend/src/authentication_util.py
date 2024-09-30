@@ -46,15 +46,21 @@ def get_current_user(
     try:
         payload = jwt.decode(token, JWT_SECRET, algorithms=["HS256"])
         user = search_for_user_in_db(payload["email"])
+        if user is None:
+            raise fastapi.HTTPException(
+                status_code=401,
+                detail="Invalid Email or Password"
+            )
     except JWTError:
         raise fastapi.HTTPException(
             status_code=401,
             detail="Could not validate credentials",
             headers={"WWW-Authenticate": "Bearer"},
         )
-    except:
+    except Exception:
         raise fastapi.HTTPException(
             status_code=401, detail="Invalid Email or Password"
         )
 
     return user.id
+
