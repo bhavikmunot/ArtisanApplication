@@ -54,18 +54,19 @@ class Chatbot extends Component {
 
         if (error != null) {
             console.log(error.status);
+            var errorMessage = '';
+            (error.status === 401) ? errorMessage = `${error.statusText}. Please re-authenticate to run the query` :
+                (error.status === 429) ? errorMessage = `API limit exceeded, Please retry after a minute` :
+                    errorMessage = 'An unknown error occurred. Please retry later.'
+
+            updatedMessages[updatedMessages.length-1].text = errorMessage;
+            this.setState({messages: updatedMessages, isLoading: false})
 
             if (error.status === 401) {
-                updatedMessages[updatedMessages.length-1].text = `${error.statusText}. Please re-authenticate to run the query`;
-                this.setState({ messages: updatedMessages, isLoading: false });
-            } else if (error.status === 429) {
-                updatedMessages[updatedMessages.length-1].text = `API limit exceeded, Please retry after a minute`;
-                this.setState({ messages: updatedMessages, isLoading: false });
-            } else {
-                const fallbackMessage = "An unknown error occurred. Please retry later.";
-                updatedMessages[updatedMessages.length-1].text = fallbackMessage;
-                this.setState({ messages: updatedMessages, isLoading: false });
+                this.props.signalExpiredToken("Re-authenticate");
+
             }
+
         } else {
             console.log(data);
             console.log(this.state.messages);

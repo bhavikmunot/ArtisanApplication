@@ -69,7 +69,7 @@ class AuthenticationModal extends Component {
         return (
             <div className="modal" >
                 <div className="modal-content">
-                    <h2>Input</h2>
+                    <h2>{this.props.heading}</h2>
                     <div>
                         <label>Username:</label>
                         <input
