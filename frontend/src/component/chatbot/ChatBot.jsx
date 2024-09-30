@@ -1,5 +1,7 @@
-import React, { Component } from 'react';
+import React, {Component} from 'react';
 import './Chatbot.css';
+import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
+import {faDeleteLeft, faHandsClapping, faPaperPlane, faPen} from '@fortawesome/free-solid-svg-icons';
 
 import avatarImage from './ava_avatar.jpg.png'
 
@@ -15,6 +17,8 @@ class Chatbot extends Component {
             userMessage: '',
             errorMessage: '',
             isLoading: false,
+            isEditing: null, // Track the message being edited
+            editMessageText: ''
         };
         this.handleNewMessageFromBot = this.handleNewMessageFromBot.bind(this);
         this.handleSend = this.handleSend.bind(this);
@@ -46,10 +50,11 @@ class Chatbot extends Component {
             "message": this.state.userMessage,
             "token": this.props.apiToken
         };
-        submitMessageReply(body, this.handleNewMessageFromBot);
+        const lastMessageIndex = this.state.messages.length - 1;
+        submitMessageReply(body, this.handleNewMessageFromBot, lastMessageIndex);
     }
 
-    handleNewMessageFromBot(data, error) {
+    handleNewMessageFromBot(data, error, index) {
         const updatedMessages = this.state.messages;
 
         if (error != null) {
@@ -59,7 +64,7 @@ class Chatbot extends Component {
                 (error.status === 429) ? errorMessage = `API limit exceeded, Please retry after a minute` :
                     errorMessage = 'An unknown error occurred. Please retry later.'
 
-            updatedMessages[updatedMessages.length-1].text = errorMessage;
+            updatedMessages[index].text = errorMessage;
             this.setState({messages: updatedMessages, isLoading: false})
 
             if (error.status === 401) {
@@ -70,13 +75,52 @@ class Chatbot extends Component {
         } else {
             console.log(data);
             console.log(this.state.messages);
-            updatedMessages[updatedMessages.length-1].text = data.reply;
+            updatedMessages[index].text = data.reply;
             this.setState({ messages: updatedMessages, isLoading:false});
         }
     };
 
     handleInputFieldChange(e) {
         this.setState({userMessage: e.target.value, errorMessage: ''})
+    }
+
+    handleDelete(index) {
+        var updatedMessages = this.state.messages
+        updatedMessages.splice(index, 2);
+
+        this.setState({ messages: updatedMessages });
+    };
+
+    handleEdit(id, currentText) {
+        this.setState({
+            isEditing: id,
+            editMessageText: currentText,
+            isLoading: true
+        });
+    };
+
+
+    handleSaveEdit(index) {
+
+        var updatedMessages = this.state.messages;
+        var editedMessage = this.state.editMessageText;
+        updatedMessages[index].text = editedMessage;
+        updatedMessages[index+1].text = 'Fetching an answer for your question...'
+        this.setState({
+            messages: updatedMessages,
+            isEditing: null,
+            userMessage: ''
+        },() => {
+            this.createAndSubmitEditMessageRequest(index+1);
+        });
+    };
+
+    createAndSubmitEditMessageRequest(index) {
+        const body = {
+            "message": this.state.userMessage,
+            "token": this.props.apiToken
+        };
+        submitMessageReply(body, this.handleNewMessageFromBot, index);
     }
 
 
@@ -87,22 +131,41 @@ class Chatbot extends Component {
                 <div className="chat-header">
                     <img className="avatar" src={avatarImage} alt="Ava"/>
                     <div>
-                        <h2>Hey👋, I'm Ava</h2>
+                        <h2>Hey {<FontAwesomeIcon icon={faHandsClapping}/>}, I'm Ava</h2>
                         <p>Ask me anything or pick a place to start</p>
                     </div>
                 </div>
 
                 <div className="chat-body">
-                    {this.state.messages.map((msg) => (
-
-
-
+                    {this.state.messages.map((msg, index) => (
                         <div key={msg.id} className={`message ${msg.sender === 'Ava' ? 'from-ava' : 'from-user'}`}>
+                            {msg.sender === 'User' && !this.state.isLoading && (
+                                <div className="message-actions">
+                                    <button className="hover-button"
+                                            onClick={() => this.handleEdit(msg.id, msg.text)} >{<FontAwesomeIcon icon={faPen} />}
+                                    </button>
+                                    <button className="hover-button"
+                                            onClick={() => this.handleDelete(index)} >{<FontAwesomeIcon icon={faDeleteLeft} />}
+                                    </button>
+                                </div>
+                            )}
 
                             {msg.sender === 'Ava' && (
                                 <img className="avatar" src={avatarImage} alt={msg.sender}/>
                             )}
+
+                            {this.state.isEditing === msg.id ? (
+                                <div className="edit-mode">
+                                    <input
+                                        type="text"
+                                        value={this.state.editMessageText}
+                                        onChange={(e) => this.setState({editMessageText: e.target.value})}
+                                    />
+                                    <button onClick={() => this.handleSaveEdit(index)}>Save</button>
+                                </div>
+                            ) : (
                                 <p>{msg.text}</p>
+                            )}
                         </div>
                     ))}
                 </div>
@@ -115,7 +178,7 @@ class Chatbot extends Component {
                         onChange={this.handleInputFieldChange}
                         disabled={this.state.isLoading}
                     />
-                    <button onClick={this.handleSend} disabled={this.state.isLoading}>Send</button>
+                    <button className={this.state.isLoading ? 'no-hover' : ''} onClick={this.handleSend} disabled={this.state.isLoading}>{<FontAwesomeIcon icon={faPaperPlane} />}</button>
                 </div>
                 {this.state.errorMessage.length > 0 &&
                     <h2 style={{color: 'red', fontSize: '10px'}}>{this.state.errorMessage}</h2>}

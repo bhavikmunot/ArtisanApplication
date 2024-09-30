@@ -26,7 +26,7 @@ export function submitFetchAPIToken(body, callback) {
 }
 
 
-export function submitMessageReply(body, callback) {
+export function submitMessageReply(body, callback, index) {
 
     const requestOptions = {
         method: "GET",
@@ -40,15 +40,15 @@ export function submitMessageReply(body, callback) {
         .then((response) => {
             if (response.ok) {
                 response.json().then((data) => {
-                    callback(data, null);
+                    callback(data, null, index);
                 });
             } else {
                 console.log(response)
-                callback(null, response);
+                callback(null, response, index);
             }
         })
         .catch((error) => {
-            callback(null, error);
+            callback(null, error, index);
         });
 
 
