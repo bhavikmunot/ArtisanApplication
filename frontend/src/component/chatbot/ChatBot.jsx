@@ -12,26 +12,32 @@ class Chatbot extends Component {
             messages: [
                 { id: 0, sender: 'Ava', text: 'Hi Jane, Amazing how Mosey is simplifying state compliance for businesses across the board!' },
             ],
-            userMessage: ''
+            userMessage: '',
+            errorMessage: '',
+            isLoading: false,
         };
         this.handleNewMessageFromBot = this.handleNewMessageFromBot.bind(this);
         this.handleSend = this.handleSend.bind(this);
         this.submitMessageToBot = this.submitMessageToBot.bind(this);
+        this.handleInputFieldChange = this.handleInputFieldChange.bind(this);
     }
 
     componentDidMount() {
     };
 
-    handleSend = () => {
+    handleSend() {
         if (this.state.userMessage.trim()) {
             const newMessage = { id: Date.now() + "User", sender: 'User', text: this.state.userMessage };
             const newMessageFromAva = { id: Date.now() + "Ava", sender: 'Ava', text: 'Fetching an answer for your question...' };
             this.setState({
                 messages: [...this.state.messages, newMessage, newMessageFromAva],
-                userMessage: ''
+                userMessage: '',
+                isLoading: true
             }, () => {
                 this.submitMessageToBot();
             });
+        } else {
+            this.setState({errorMessage: "Message can't be empty"});
         }
     };
 
@@ -51,22 +57,26 @@ class Chatbot extends Component {
 
             if (error.status === 401) {
                 updatedMessages[updatedMessages.length-1].text = `${error.statusText}. Please re-authenticate to run the query`;
-                this.setState({ messages: updatedMessages });
+                this.setState({ messages: updatedMessages, isLoading: false });
             } else if (error.status === 429) {
                 updatedMessages[updatedMessages.length-1].text = `API limit exceeded, Please retry after a minute`;
-                this.setState({ messages: updatedMessages });
+                this.setState({ messages: updatedMessages, isLoading: false });
             } else {
                 const fallbackMessage = "An unknown error occurred. Please retry later.";
                 updatedMessages[updatedMessages.length-1].text = fallbackMessage;
-                this.setState({ messages: updatedMessages });
+                this.setState({ messages: updatedMessages, isLoading: false });
             }
         } else {
             console.log(data);
             console.log(this.state.messages);
             updatedMessages[updatedMessages.length-1].text = data.reply;
-            this.setState({ messages: updatedMessages});
+            this.setState({ messages: updatedMessages, isLoading:false});
         }
     };
+
+    handleInputFieldChange(e) {
+        this.setState({userMessage: e.target.value, errorMessage: ''})
+    }
 
 
     render() {
@@ -94,10 +104,13 @@ class Chatbot extends Component {
                         type="text"
                         placeholder="Your Question..."
                         value={this.state.userMessage}
-                        onChange={(e) => this.setState({userMessage: e.target.value})}
+                        onChange={this.handleInputFieldChange}
+                        disabled={this.state.isLoading}
                     />
-                    <button onClick={this.handleSend}>Send</button>
+                    <button onClick={this.handleSend} disabled={this.state.isLoading}>Send</button>
                 </div>
+                {this.state.errorMessage.length > 0 &&
+                    <h2 style={{color: 'red', fontSize: '10px'}}>{this.state.errorMessage}</h2>}
             </div>
         );
     }

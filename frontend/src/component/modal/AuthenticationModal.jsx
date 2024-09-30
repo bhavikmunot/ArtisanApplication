@@ -7,26 +7,34 @@ class AuthenticationModal extends Component {
         super(props);
         this.state = {
             username: "",
-            password: ""
+            password: "",
+            isErrorAuthenticating: false,
+            errorMessage: "",
+            isLoading: false,
         };
         this.handleAuthenticationResult = this.handleAuthenticationResult.bind(this);
         this.handleChange = this.handleChange.bind(this);
         this.handleLogin = this.handleLogin.bind(this);
     }
 
-    // Handle input changes for username and password
-    handleChange = (e) => {
-        this.setState({ [e.target.name]: e.target.value});
+    handleChange(e){
+        this.setState({ [e.target.name]: e.target.value,  isErrorAuthenticating: false });
     };
 
-    // Handle the login attempt
-    handleLogin = () => {
-        const body = {
-            username: this.state.username,
-            password: this.state.password,
-        }
 
-        submitFetchAPIToken(body, this.handleAuthenticationResult)
+    handleLogin() {
+        if (this.state.username.length===0 || this.state.password.length === 0 ) {
+            this.setState({
+                isErrorAuthenticating: true,
+                errorMessage: "Username or password cannot be blank"})
+        } else {
+            const body = {
+                username: this.state.username,
+                password: this.state.password
+            }
+            this.setState({isLoading: true});
+            submitFetchAPIToken(body, this.handleAuthenticationResult);
+        }
     };
 
     handleAuthenticationResult(data, error) {
@@ -35,11 +43,13 @@ class AuthenticationModal extends Component {
             if (error.status === 401) {
                 this.setState({
                     isErrorAuthenticating: true,
-                    errorMessage: "Invalid username or password"
+                    isLoading: false,
+                    errorMessage: "Invalid username or password",
                 })
             } else {
                 this.setState({
                     isErrorAuthenticating: true,
+                    isLoading: false,
                     errorMessage: "An unknown error occurred. Please retry later."
                 })
             }
@@ -47,7 +57,8 @@ class AuthenticationModal extends Component {
             this.props.onLoginSuccess(data.access_token)
             this.setState({
                 username: "",
-                password: ""
+                password: "",
+                isLoading: false
             })
         }
     }
@@ -75,9 +86,12 @@ class AuthenticationModal extends Component {
                             name="password"
                             value={this.state.password}
                             onChange={this.handleChange}
+                            disabled={this.state.isLoading}
                         />
                     </div>
-                    <button onClick={this.handleLogin}>Login</button>
+                    {<button onClick={this.handleLogin} disabled={this.state.isLoading}>Login</button>}
+                    {this.state.isErrorAuthenticating && <h2 style={{color: 'red', fontSize: '10px'}}>{this.state.errorMessage}</h2>}
+                    {this.state.isLoading && <h2 style={{color: 'blue', fontSize: '10px'}}>{"Validating your credentials"}</h2>}
                 </div>
             </div>
         );
