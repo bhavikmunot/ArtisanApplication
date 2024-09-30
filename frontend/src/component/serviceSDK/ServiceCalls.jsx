@@ -24,3 +24,32 @@ export function submitFetchAPIToken(body, callback) {
             callback(null, error);
         });
 }
+
+
+export function submitMessageReply(body, callback) {
+
+    const requestOptions = {
+        method: "GET",
+        headers: {
+            "Content-Type": "application/json",
+            "Authorization": "Bearer " + body.token,
+        }
+    };
+
+    fetch("http://127.0.0.1:8000/api/message_reply/${param1}", requestOptions)
+        .then((response) => {
+            if (response.ok) {
+                response.json().then((data) => {
+                    callback(data, null);
+                });
+            } else {
+                console.log(response)
+                callback(null, response);
+            }
+        })
+        .catch((error) => {
+            callback(null, error);
+        });
+
+
+}

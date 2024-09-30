@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import './App.css';
 import AuthenticationModal from "../src/component/modal/AuthenticationModal";
+import Chatbot from "./component/chatbot/ChatBot";
 
 class App extends Component {
   constructor(props) {
@@ -26,8 +27,7 @@ class App extends Component {
           {!this.state.isAuthenticated && <AuthenticationModal
               onLoginSuccess={this.handleLoginSuccess}
           />}
-          <div>Welcome From the Bot</div>
-
+          <Chatbot apiToken={this.state.apiToken}/>
         </div>
     );
   }
