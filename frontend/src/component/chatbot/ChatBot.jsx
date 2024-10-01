@@ -1,4 +1,4 @@
-import React, {Component} from 'react';
+import React, {Component, createRef } from 'react';
 import './Chatbot.css';
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faDeleteLeft, faHandsClapping, faPaperPlane, faPen} from '@fortawesome/free-solid-svg-icons';
@@ -10,6 +10,7 @@ import {submitMessageReply} from "../serviceSDK/ServiceCalls";
 class Chatbot extends Component {
     constructor(props) {
         super(props);
+        this.scrollToRef = createRef();
         this.state = {
             messages: [
                 { id: 0, sender: 'Ava', text: 'Hi Jane, Amazing how Mosey is simplifying state compliance for businesses across the board!' },
@@ -17,8 +18,8 @@ class Chatbot extends Component {
             userMessage: '',
             errorMessage: '',
             isLoading: false,
-            isEditing: null, // Track the message being edited
-            editMessageText: ''
+            isEditing: null,
+            editMessageText: '',
         };
         this.handleNewMessageFromBot = this.handleNewMessageFromBot.bind(this);
         this.handleSend = this.handleSend.bind(this);
@@ -27,7 +28,7 @@ class Chatbot extends Component {
     }
 
     componentDidMount() {
-    };
+    }
 
     handleSend() {
         if (this.state.userMessage.trim()) {
@@ -65,7 +66,9 @@ class Chatbot extends Component {
                     errorMessage = 'An unknown error occurred. Please retry later.'
 
             updatedMessages[index].text = errorMessage;
-            this.setState({messages: updatedMessages, isLoading: false})
+            this.setState({messages: updatedMessages, isLoading: false}, () => {
+                this.scrollToTheBottom(index);
+            })
 
             if (error.status === 401) {
                 this.props.signalExpiredToken("Re-authenticate");
@@ -76,9 +79,19 @@ class Chatbot extends Component {
             console.log(data);
             console.log(this.state.messages);
             updatedMessages[index].text = data.reply;
-            this.setState({ messages: updatedMessages, isLoading:false});
+            this.setState({ messages: updatedMessages, isLoading:false}, () => {
+                this.scrollToTheBottom(index);
+            });
         }
     };
+
+    scrollToTheBottom(index) {
+        if (index === this.state.messages.length-1) {
+            if( this.scrollToRef.current ) {
+                this.scrollToRef.current.scrollIntoView();
+            }
+        }
+    }
 
     handleInputFieldChange(e) {
         this.setState({userMessage: e.target.value, errorMessage: ''})
@@ -141,10 +154,10 @@ class Chatbot extends Component {
                         <div key={msg.id} className={`message ${msg.sender === 'Ava' ? 'from-ava' : 'from-user'}`}>
                             {msg.sender === 'User' && !this.state.isLoading && (
                                 <div className="message-actions">
-                                    <button className="hover-button"
+                                    <button className="hover-button" title="Edit"
                                             onClick={() => this.handleEdit(msg.id, msg.text)} >{<FontAwesomeIcon icon={faPen} />}
                                     </button>
-                                    <button className="hover-button"
+                                    <button className="hover-button" title="Delete"
                                             onClick={() => this.handleDelete(index)} >{<FontAwesomeIcon icon={faDeleteLeft} />}
                                     </button>
                                 </div>
@@ -168,6 +181,7 @@ class Chatbot extends Component {
                             )}
                         </div>
                     ))}
+                    <div ref={this.scrollToRef}></div>
                 </div>
 
                 <div className="chat-footer">
