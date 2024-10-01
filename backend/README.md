@@ -24,7 +24,7 @@ pip3 install slowapi python-jose pytest pytest-asyncio
 
 ```
 
-run the following command to run the API server
+run the following command to run the API server from the backend folder
 ```commandline
  uvicorn src.main:app --reload
 ```

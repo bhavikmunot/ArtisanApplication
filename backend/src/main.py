@@ -30,6 +30,11 @@ app.state.limiter = limiter
 app.add_exception_handler(429, _rate_limit_exceeded_handler)
 
 
+#In a real-world usecase, we would be using a cloudAuth server to create/validate the token.
+#In that case, the generate_token api should be in a difference subpackage and the path be added to the api_router.
+#It makes the package structure better and manageable.
+#To keep things simple, I am not adding an api_router and keeping the apis in main.py.
+
 @app.post("/api/token")
 async def generate_token(
         form_data: security.OAuth2PasswordRequestForm = fastapi.Depends(),
