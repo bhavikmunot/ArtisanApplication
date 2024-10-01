@@ -2,6 +2,15 @@
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
+Install the following dependencies to add font-awesome to the project
+
+### `npm install @fortawesome/react-fontawesome @fortawesome/free-solid-svg-icons`
+### `npm i --save @fortawesome/fontawesome-svg-core`
+### `npm i --save @fortawesome/free-solid-svg-icons`
+### `npm i --save @fortawesome/free-regular-svg-icons`
+### `npm i --save @fortawesome/free-brands-svg-icons`
+### `npm i --save @fortawesome/react-fontawesome@latest`
+
 ## Available Scripts
 
 In the project directory, you can run:

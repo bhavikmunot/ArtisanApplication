@@ -26,7 +26,7 @@ export function submitFetchAPIToken(body, callback) {
 }
 
 
-export function submitMessageReply(body, callback, index) {
+export function submitMessageToBot(body, callback, index) {
 
     const requestOptions = {
         method: "GET",

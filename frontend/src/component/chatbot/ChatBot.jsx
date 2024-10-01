@@ -1,11 +1,11 @@
-import React, {Component, createRef } from 'react';
+import React, {Component, createRef} from 'react';
 import './Chatbot.css';
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faDeleteLeft, faHandsClapping, faPaperPlane, faPen} from '@fortawesome/free-solid-svg-icons';
 
 import avatarImage from './ava_avatar.jpg.png'
 
-import {submitMessageReply} from "../serviceSDK/ServiceCalls";
+import {submitMessageToBot} from "../serviceSDK/ServiceCalls";
 
 class Chatbot extends Component {
     constructor(props) {
@@ -52,15 +52,14 @@ class Chatbot extends Component {
             "token": this.props.apiToken
         };
         const lastMessageIndex = this.state.messages.length - 1;
-        submitMessageReply(body, this.handleNewMessageFromBot, lastMessageIndex);
+        submitMessageToBot(body, this.handleNewMessageFromBot, lastMessageIndex);
     }
 
     handleNewMessageFromBot(data, error, index) {
         const updatedMessages = this.state.messages;
 
         if (error != null) {
-            console.log(error.status);
-            var errorMessage = '';
+            let errorMessage = '';
             (error.status === 401) ? errorMessage = `${error.statusText}. Please re-authenticate to run the query` :
                 (error.status === 429) ? errorMessage = `API limit exceeded, Please retry after a minute` :
                     errorMessage = 'An unknown error occurred. Please retry later.'
@@ -76,8 +75,6 @@ class Chatbot extends Component {
             }
 
         } else {
-            console.log(data);
-            console.log(this.state.messages);
             updatedMessages[index].text = data.reply;
             this.setState({ messages: updatedMessages, isLoading:false}, () => {
                 this.scrollToTheBottom(index);
@@ -98,7 +95,7 @@ class Chatbot extends Component {
     }
 
     handleDelete(index) {
-        var updatedMessages = this.state.messages
+        const updatedMessages = this.state.messages;
         updatedMessages.splice(index, 2);
 
         this.setState({ messages: updatedMessages });
@@ -114,10 +111,8 @@ class Chatbot extends Component {
 
 
     handleSaveEdit(index) {
-
         var updatedMessages = this.state.messages;
-        var editedMessage = this.state.editMessageText;
-        updatedMessages[index].text = editedMessage;
+        updatedMessages[index].text = this.state.editMessageText;
         updatedMessages[index+1].text = 'Fetching an answer for your question...'
         this.setState({
             messages: updatedMessages,
@@ -133,7 +128,7 @@ class Chatbot extends Component {
             "message": this.state.userMessage,
             "token": this.props.apiToken
         };
-        submitMessageReply(body, this.handleNewMessageFromBot, index);
+        submitMessageToBot(body, this.handleNewMessageFromBot, index);
     }
 
 

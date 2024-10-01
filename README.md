@@ -1,24 +1,13 @@
 # ArtisanApplication
-A simple chat bot application
+A simple chat bot application.
 
-# Execute
+Clone the package and please follow the instructions mentioned in the backend and frontend package README.md to run the application.
+The http api port for the API in react app as well as the middleware port for the backend API are hardcoded, please update them accordingly.
 
-Navigate to the backend folder and execute the following
-to download the python dependencies
-```
-cd backend
-python3 -m venv venv #create your virtual env
+To keep the application simple, I have add a single correct username and password authentication.
+Please use credentails to login/authenticate:
 
-```
+### username: person@gmail.com
+### password: hashed_password
 
-Go to the venv folder and activate the source
-```commandline
-cd venv
-.\Scripts\activate
 
-```
-
-install the following dependencies
-```commandline
-pip3 install fastapi[standard] pyjwt uvicorn
-```
