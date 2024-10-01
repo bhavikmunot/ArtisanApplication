@@ -3,7 +3,7 @@ from fastapi.testclient import TestClient
 
 from ..src import main, authentication_util
 
-class TestAPIMethods(unittest.TestCase):
+class TestMainAPIRateLimiting(unittest.TestCase):
     def setUp(self):
         self.client = TestClient(main.app)
         self.valid_username = "person@gmail.com"

@@ -4,7 +4,7 @@ from fastapi.testclient import TestClient
 
 from ..src import main, authentication_util, model
 
-class TestAPIMethods(unittest.TestCase):
+class TestMainAPI(unittest.TestCase):
     def setUp(self):
         self.client = TestClient(main.app)
         self.valid_username = "person@gmail.com"
