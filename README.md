@@ -11,6 +11,7 @@ Please use below credentails to login/authenticate:
 ### password: hashed_password
 
 10. Link to the walk through video: https://www.loom.com/share/8b8c1ebd2a024ace997de71771ef4cd8?sid=271f920f-158d-4df5-8eff-f81395421957
+11. Error Handling and animation/transitions video: https://www.loom.com/share/6a74e3cf9f2842a39d703c782df2ef4a?sid=c3956680-f9bc-414f-aa5d-9ed4b60b3d22
 
 
 
