@@ -10,6 +10,9 @@ Please use below credentails to login/authenticate:
 ### username: person@gmail.com
 ### password: hashed_password
 
+10. Link to the walk through video: https://www.loom.com/share/8b8c1ebd2a024ace997de71771ef4cd8?sid=271f920f-158d-4df5-8eff-f81395421957
+
+
 
 Adding some comments here incase, the comments in the code are missed.
  have tried to add features in an incremental manner, within the timeframe of 8-9 hours. If I had more time, I would have also made the following changes:
@@ -23,5 +26,4 @@ Adding some comments here incase, the comments in the code are missed.
 7. For the backend, I should have used api_router, but as I haven't used FastAPI at a larger scale, I didn't invest more time there. I have used Akka for DistributedSystems/API
 8. I would have used Protobuf instead of json
 9. used dom router and breadcrumbs
-10. Link to the walk through video: https://www.loom.com/share/8b8c1ebd2a024ace997de71771ef4cd8?sid=271f920f-158d-4df5-8eff-f81395421957
-
+10.
