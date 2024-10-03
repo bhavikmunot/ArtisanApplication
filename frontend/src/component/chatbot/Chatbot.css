@@ -1,3 +1,4 @@
+/* Most of the colour codes are taken from google, I am not good remembering such codes*/
 .chatbot-container {
     display: flex;
     flex-direction: column;
@@ -197,6 +198,7 @@
     background-color: #5e3ab7;
 }
 
+/* I think there more to what we can do for a responsive and mobile query. But keeping it short for now */
 @media (max-width: 600px) {
     .chat-body {
         font-size: 13px;

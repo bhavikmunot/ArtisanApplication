@@ -6,7 +6,7 @@ import {faDeleteLeft, faHandsClapping, faPaperPlane, faPen} from '@fortawesome/f
 import avatarImage from './ava_avatar.jpg.png'
 
 import {submitMessageToBot} from "../serviceSDK/ServiceCalls";
-
+/*I have majorly used class componenets, hence preferring that over functional components*/
 class Chatbot extends Component {
     constructor(props) {
         super(props);
@@ -22,15 +22,15 @@ class Chatbot extends Component {
             editMessageText: '',
         };
         this.handleNewMessageFromBot = this.handleNewMessageFromBot.bind(this);
-        this.handleSend = this.handleSend.bind(this);
-        this.submitMessageToBot = this.submitMessageToBot.bind(this);
+        this.handleSendButtonClick = this.handleSendButtonClick.bind(this);
+        this.createAndSubmitNewMessageRequest = this.createAndSubmitNewMessageRequest.bind(this);
         this.handleInputFieldChange = this.handleInputFieldChange.bind(this);
     }
 
     componentDidMount() {
     }
 
-    handleSend() {
+    handleSendButtonClick() {
         if (this.state.userMessage.trim()) {
             const newMessage = { id: Date.now() + "User", sender: 'User', text: this.state.userMessage };
             const newMessageFromAva = { id: Date.now() + "Ava", sender: 'Ava', text: 'Fetching an answer for your question...' };
@@ -39,14 +39,14 @@ class Chatbot extends Component {
                 userMessage: '',
                 isLoading: true
             }, () => {
-                this.submitMessageToBot();
+                this.createAndSubmitNewMessageRequest();
             });
         } else {
             this.setState({errorMessage: "Message can't be empty"});
         }
     };
 
-    submitMessageToBot() {
+    createAndSubmitNewMessageRequest() {
         const body = {
             "message": this.state.userMessage,
             "token": this.props.apiToken
@@ -55,29 +55,31 @@ class Chatbot extends Component {
         submitMessageToBot(body, this.handleNewMessageFromBot, lastMessageIndex);
     }
 
-    handleNewMessageFromBot(data, error, index) {
+    handleNewMessageFromBot(data, error, indexOfTheMessageToUpdate) {
         const updatedMessages = this.state.messages;
 
         if (error != null) {
             let errorMessage = '';
+            //In-general, most of the "String literals" should be constants
             (error.status === 401) ? errorMessage = `${error.statusText}. Please re-authenticate to run the query` :
                 (error.status === 429) ? errorMessage = `API limit exceeded, Please retry after a minute` :
                     errorMessage = 'An unknown error occurred. Please retry later.'
 
-            updatedMessages[index].text = errorMessage;
+            updatedMessages[indexOfTheMessageToUpdate].text = errorMessage;
             this.setState({messages: updatedMessages, isLoading: false}, () => {
-                this.scrollToTheBottom(index);
+                this.scrollToTheBottom(indexOfTheMessageToUpdate);
             })
 
             if (error.status === 401) {
+                //Re-authenticate should be a constant. In-general, most of the "String literals" should be constants
                 this.props.signalExpiredToken("Re-authenticate");
 
             }
 
         } else {
-            updatedMessages[index].text = data.reply;
+            updatedMessages[indexOfTheMessageToUpdate].text = data.reply;
             this.setState({ messages: updatedMessages, isLoading:false}, () => {
-                this.scrollToTheBottom(index);
+                this.scrollToTheBottom(indexOfTheMessageToUpdate);
             });
         }
     };
@@ -94,14 +96,14 @@ class Chatbot extends Component {
         this.setState({userMessage: e.target.value, errorMessage: ''})
     }
 
-    handleDelete(index) {
+    handleDeleteMessage(index) {
         const updatedMessages = this.state.messages;
         updatedMessages.splice(index, 2);
 
         this.setState({ messages: updatedMessages });
     };
 
-    handleEdit(id, currentText) {
+    handleEditMessage(id, currentText) {
         this.setState({
             isEditing: id,
             editMessageText: currentText,
@@ -131,7 +133,9 @@ class Chatbot extends Component {
         submitMessageToBot(body, this.handleNewMessageFromBot, index);
     }
 
-
+    /*If I had time, I would have made 3 class (chat-header, chat-body and chat-footer*/
+    /*That would have made the code more manageable and testable*/
+    /*And this class would be the main driver class*/
     render() {
 
         return (
@@ -150,10 +154,10 @@ class Chatbot extends Component {
                             {msg.sender === 'User' && !this.state.isLoading && (
                                 <div className="message-actions">
                                     <button className="hover-button" title="Edit"
-                                            onClick={() => this.handleEdit(msg.id, msg.text)} >{<FontAwesomeIcon icon={faPen} />}
+                                            onClick={() => this.handleEditMessage(msg.id, msg.text)} >{<FontAwesomeIcon icon={faPen} />}
                                     </button>
                                     <button className="hover-button" title="Delete"
-                                            onClick={() => this.handleDelete(index)} >{<FontAwesomeIcon icon={faDeleteLeft} />}
+                                            onClick={() => this.handleDeleteMessage(index)} >{<FontAwesomeIcon icon={faDeleteLeft} />}
                                     </button>
                                 </div>
                             )}
@@ -187,8 +191,10 @@ class Chatbot extends Component {
                         onChange={this.handleInputFieldChange}
                         disabled={this.state.isLoading}
                     />
-                    <button className={this.state.isLoading ? 'no-hover' : ''} onClick={this.handleSend} disabled={this.state.isLoading}>{<FontAwesomeIcon icon={faPaperPlane} />}</button>
+                    <button className={this.state.isLoading ? 'no-hover' : ''} onClick={this.handleSendButtonClick} disabled={this.state.isLoading}>{<FontAwesomeIcon icon={faPaperPlane} />}</button>
                 </div>
+                {/*The below error message should be a common method in class "commonUtils"*/}
+                {/*It is getting used in the authenticationModal as well. Hence...*/}
                 {this.state.errorMessage.length > 0 &&
                     <h2 style={{color: 'red', fontSize: '10px'}}>{this.state.errorMessage}</h2>}
             </div>

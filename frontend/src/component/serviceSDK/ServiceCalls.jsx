@@ -35,7 +35,8 @@ export function submitMessageToBot(body, callback, index) {
             "Authorization": "Bearer " + body.token,
         }
     };
-
+    {/*I could have used caching here, but it's difficult to decide when to cache and when not to*/}
+    {/*in a chatbot-LLM application in such a short time frame.*/}
     fetch("http://127.0.0.1:8000/api/message_reply/${param1}", requestOptions)
         .then((response) => {
             if (response.ok) {
