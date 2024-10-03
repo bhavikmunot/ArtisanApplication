@@ -41,12 +41,14 @@ class Chatbot extends Component {
             }, () => {
                 this.createAndSubmitNewMessageRequest();
             });
+
         } else {
             this.setState({errorMessage: "Message can't be empty"});
         }
     };
 
-    createAndSubmitNewMessageRequest() {
+
+createAndSubmitNewMessageRequest() {
         const body = {
             "message": this.state.userMessage,
             "token": this.props.apiToken
@@ -96,14 +98,14 @@ class Chatbot extends Component {
         this.setState({userMessage: e.target.value, errorMessage: ''})
     }
 
-    handleDeleteMessage(index) {
+    handleDeleteButtonClick(index) {
         const updatedMessages = this.state.messages;
         updatedMessages.splice(index, 2);
 
         this.setState({ messages: updatedMessages });
     };
 
-    handleEditMessage(id, currentText) {
+    handleEditDeleteButtonClick(id, currentText) {
         this.setState({
             isEditing: id,
             editMessageText: currentText,
@@ -150,14 +152,14 @@ class Chatbot extends Component {
 
                 <div className="chat-body">
                     {this.state.messages.map((msg, index) => (
-                        <div key={msg.id} className={`message ${msg.sender === 'Ava' ? 'from-ava' : 'from-user'}`}>
+                        <div key={msg.id} id={msg.id} className={`message ${msg.sender === 'Ava' ? 'from-ava' : 'from-user'}`}>
                             {msg.sender === 'User' && !this.state.isLoading && (
                                 <div className="message-actions">
                                     <button className="hover-button" title="Edit"
-                                            onClick={() => this.handleEditMessage(msg.id, msg.text)} >{<FontAwesomeIcon icon={faPen} />}
+                                            onClick={() => this.handleEditDeleteButtonClick(msg.id, msg.text)} >{<FontAwesomeIcon icon={faPen} />}
                                     </button>
                                     <button className="hover-button" title="Delete"
-                                            onClick={() => this.handleDeleteMessage(index)} >{<FontAwesomeIcon icon={faDeleteLeft} />}
+                                            onClick={() => this.handleDeleteButtonClick(index)} >{<FontAwesomeIcon icon={faDeleteLeft} />}
                                     </button>
                                 </div>
                             )}

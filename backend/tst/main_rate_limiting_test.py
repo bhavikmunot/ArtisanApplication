@@ -1,7 +1,9 @@
 import unittest
 from fastapi.testclient import TestClient
 
-from ..src import main, authentication_util
+from ..src import main
+from src.util import authentication_util
+
 
 class TestMainAPIRateLimiting(unittest.TestCase):
     def setUp(self):

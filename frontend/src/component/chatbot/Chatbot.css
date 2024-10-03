@@ -56,11 +56,15 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    max-width: 60%;
-    width: 60%;
-
+    max-width: 50%;
+    width: 50%;
+    opacity: 0;
+    transition: opacity 0.3s ease-in-out;
 }
 
+.message.show {
+    opacity: 1;
+}
 
 .from-ava {
     display: flex;
@@ -115,7 +119,7 @@
     border: 1px solid #ccc;
     border-radius: 20px;
     margin-right: 10px;
-    width: 50vw;
+    width: 30vw;
 }
 
 .chat-footer button {
@@ -230,4 +234,21 @@
         width: 100vw;
     }
 }
+
+@keyframes slideIn {
+    0% {
+        transform: translateY(20px);
+        opacity: 0;
+    }
+    100% {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+.message {
+    animation: slideIn 0.5s ease-in-out;
+    animation-fill-mode: forwards; /* Keeps the final state after animation */
+}
+
 

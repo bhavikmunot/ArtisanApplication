@@ -3,13 +3,13 @@ from datetime import datetime, timedelta
 import fastapi.security as security
 from jose import JWTError, jwt
 
-from . import model
+from src.model import UserModel
 
 # This is the simplest possible approach for me to show reusability:
 # There should be a single instance of the db_dao (data access object). This object should be injected
 # and other classes should not create multiple instances of the dao class.
 # Hence, I am not creating an object of a class and then using the object to call search_for_user_in_db
-from .fake_credentials_db_dao import search_for_user_in_db
+from src.dao.fake_credentials_db_dao import search_for_user_in_db
 
 oauth2schema = security.OAuth2PasswordBearer(tokenUrl="/api/token")
 
@@ -60,7 +60,7 @@ async def authenticate_user(email: str, password: str):
         return False
 
 
-async def create_token(user: model.User):
+async def create_token(user: UserModel.User):
 
     """
     Generate a JWT token for the authenticated user.

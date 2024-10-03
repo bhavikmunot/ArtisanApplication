@@ -2,7 +2,9 @@ import unittest
 from unittest.mock import AsyncMock
 from fastapi.testclient import TestClient
 
-from ..src import main, authentication_util, model
+from ..src import main, model
+from src.util import authentication_util
+
 
 class TestMainAPI(unittest.TestCase):
     def setUp(self):

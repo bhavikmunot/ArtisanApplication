@@ -1,4 +1,5 @@
 import random
+from time import sleep
 from typing import Annotated
 from fastapi.middleware.cors import CORSMiddleware
 
@@ -9,8 +10,8 @@ from slowapi import Limiter, _rate_limit_exceeded_handler
 from slowapi.middleware import SlowAPIMiddleware
 from slowapi.util import get_remote_address
 
-from .static_chatbot_responses import STATIC_RESPONSE
-from .authentication_util import get_current_user, authenticate_user, create_token
+from src.util.static_chatbot_responses import STATIC_RESPONSE
+from src.util.authentication_util import get_current_user, authenticate_user, create_token
 
 limiter = Limiter(key_func=get_remote_address)
 

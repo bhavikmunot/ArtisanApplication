@@ -1,8 +1,8 @@
-from . import model
+from src.model import UserModel
 
 # Constant list denoting items in a db
 FAKE_DATABASE_ITEMS = [
-    model.User('1', 'person@gmail.com', 'hashed_password'),
+    UserModel.User('1', 'person@gmail.com', 'hashed_password'),
 ]
 
 # In a real-world usecase this method should be part of a DAO class and a DI framework-(singleton object through
