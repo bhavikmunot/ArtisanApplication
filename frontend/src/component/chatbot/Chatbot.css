@@ -4,12 +4,13 @@
     flex-direction: column;
     justify-content: flex-start;
     align-items: center;
-    width: 100vw;
+    width: 100%;
     margin: 0 auto;
     height: 100vh;
     border: 1px solid #e0e0e0;
     border-radius: 20px;
     overflow: scroll;
+    box-sizing: border-box;
 }
 
 .chat-header {
@@ -28,12 +29,12 @@
 }
 
 .chat-header h2 {
-    font-size: 18px;
+    font-size: 1.1rem;
     margin: 0;
 }
 
 .chat-header p {
-    font-size: 12px;
+    font-size: 0.8rem;
     color: #888;
     margin-top: 4px;
 }
@@ -47,7 +48,7 @@
     flex-direction: column;
     gap: 15px;
     align-items: center;
-    width: 100vw;
+    width: 100%;
     box-sizing: border-box;
 }
 
@@ -119,7 +120,7 @@
     border: 1px solid #ccc;
     border-radius: 20px;
     margin-right: 10px;
-    width: 30vw;
+    width: 30%;
 }
 
 .chat-footer button {
@@ -202,26 +203,59 @@
     background-color: #5e3ab7;
 }
 
-/* I think there more to what we can do for a responsive and mobile query. But keeping it short for now */
-@media (max-width: 600px) {
-    .chat-body {
-        font-size: 13px;
-        width: 100vw;
+
+@media (max-width: 1100px) {
+
+
+    .message {
+        max-width: 100%;
+        width: 100%;
     }
+
     .chat-header h2 {
-        font-size: 15px;
+        font-size: 1.2rem;
         margin: 0;
     }
 
     .chat-header p {
-        font-size: 12px;
+        font-size: 0.7rem;
         color: #888;
         margin-top: 2px;
     }
 
+    .chat-header p,
     .chat-header .avatar {
-        width: 23px;
-        height: 23px;
+        display: none;
+    }
+
+    .chat-body {
+        font-size: 1.5rem;
+        width: 100%;
+        margin: 0;
+    }
+}
+
+/* I think there more to what we can do for a responsive and mobile query. But keeping it short for now */
+@media (max-width: 600px) {
+    .chat-body {
+        font-size: 1.2rem;
+        width: 100%;
+        margin: 0;
+    }
+    .chat-header h2 {
+        font-size: 1.2rem;
+        margin: 0;
+    }
+
+    .chat-header p {
+        font-size: 0.7rem;
+        color: #888;
+        margin-top: 2px;
+    }
+
+    .chat-header p,
+    .chat-header .avatar {
+        display: none;
     }
 
     .chat-body .avatar {
@@ -230,8 +264,17 @@
     }
 
     .message {
-        max-width: 100vw;
-        width: 100vw;
+        max-width: 100%;
+        width: 100%;
+    }
+
+    .chat-footer input {
+        flex-grow: 1;
+        padding: 10px;
+        border: 1px solid #ccc;
+        border-radius: 20px;
+        margin-right: 10px;
+        width: 50%;
     }
 }
 
