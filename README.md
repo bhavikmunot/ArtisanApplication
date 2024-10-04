@@ -10,8 +10,7 @@ Please use below credentails to login/authenticate:
 ### username: person@gmail.com
 ### password: hashed_password
 
-10. Link to the walk through video: https://www.loom.com/share/8b8c1ebd2a024ace997de71771ef4cd8?sid=271f920f-158d-4df5-8eff-f81395421957
-11. Error Handling and animation/transitions video: https://www.loom.com/share/6a74e3cf9f2842a39d703c782df2ef4a?sid=c3956680-f9bc-414f-aa5d-9ed4b60b3d22
+Demonstration video: https://www.loom.com/share/053bca55d7874523b8d27bfeb977d2f6?sid=6779665b-6615-423b-b5a6-111b3e40bf42
 
 
 
