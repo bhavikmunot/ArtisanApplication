@@ -9,6 +9,13 @@ from src.util import authentication_util
 
 class TestAuthenticationUtil(unittest.TestCase):
 
+
+
+
+
+
+
+
     def setUp(self):
         self.valid_user = User(id=1, email="test@example.com", fake_hashed_password="hashed_password")
         self.valid_password = "hashed_password"
